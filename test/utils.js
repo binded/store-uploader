@@ -5,6 +5,7 @@ import path from 'path'
 import rimraf from 'rimraf'
 import mkdirp from 'mkdirp'
 import fs from 'fs'
+import miss from 'mississippi'
 import initUpload from '../src'
 
 const relPath = (str) => path.join(__dirname, str)
@@ -42,5 +43,14 @@ export default () => {
   const storeType = process.env.STORE_TYPE || 'fs'
   const initBlobStore = getBlobStore(storeType)
   const store = initBlobStore()
-  return initUpload(store)
+  const upload = initUpload(store)
+  const read = (key) => new Promise((resolve, reject) => {
+    const rs = store.createReadStream(key)
+    return miss.pipe(rs, miss.concat((str) => {
+      resolve(str)
+    }), (err) => {
+      if (err) return reject(err)
+    })
+  })
+  return { upload, store, read }
 }

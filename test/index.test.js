@@ -1,7 +1,8 @@
 import test from 'blue-tape'
-import getUploader, { getReadStream } from './utils'
+import { createHash } from 'crypto'
+import init, { getReadStream } from './utils'
 
-const upload = getUploader()
+const { upload, read } = init()
 
 test('kitchen sink', (t) => (
   upload(getReadStream()).then(({ digests, size, key }) => {
@@ -13,5 +14,21 @@ test('kitchen sink', (t) => (
     t.equal(size, 2447774)
     t.ok(typeof key === 'string')
     t.ok(key.length > 5)
-  }).catch(t.fail)
+    return { key }
+  })
+  .then(({ key }) => read(key))
+  .then((file) => {
+    const md5 = createHash('md5').update(file).digest('hex')
+    t.equal(md5, '4986d9c661a8da5efb29cee86498668a')
+  })
+  .catch(t.fail)
 ))
+
+test('parallel', (t) => {
+  t.plan(3)
+  for (let i = 0; i < 3; i++) {
+    upload(getReadStream()).then(({ size }) => {
+      t.equal(size, 2447774)
+    }).catch(t.fail)
+  }
+})
