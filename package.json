@@ -31,6 +31,7 @@
     "node": ">=6"
   },
   "devDependencies": {
+    "aws-sdk": "^2.5.4",
     "babel-cli": "^6.14.0",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
@@ -39,8 +40,11 @@
     "blue-tape": "^0.2.0",
     "cz-conventional-changelog": "^1.2.0",
     "eslint-config-blockai": "^1.0.1",
+    "fs-blob-store": "^5.2.1",
+    "mkdirp": "^0.5.1",
     "nodemon": "^1.10.2",
     "rimraf": "^2.5.4",
+    "s3-blob-store": "github:olalonde/s3-blob-store#range-requests",
     "semantic-release": "^4.3.5"
   },
   "release": {
@@ -53,5 +57,12 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "common-streams": "^1.0.1",
+    "debug": "^2.2.0",
+    "maybedone": "0.0.2",
+    "mississippi": "^1.2.0",
+    "uuid": "^2.0.2"
   }
 }
